@@ -37,8 +37,27 @@ project(tritoncommon LANGUAGES C CXX)
 option(TRITON_COMMON_ENABLE_PROTOBUF "Build protobuf artifacts" OFF)
 option(TRITON_COMMON_ENABLE_GRPC "Build grpc artifacts" OFF)
 
-find_package(RapidJSON CONFIG REQUIRED)
-message(STATUS "RapidJSON found. Headers: ${RAPIDJSON_INCLUDE_DIRS}")
+# Covered by metabuild today
+# https://git.corp.adobe.com/meta-archives/rapidjson
+# https://git.corp.adobe.com/meta-specs/rapidjson
+include(FetchContent)
+
+FetchContent_Declare(rapidjson
+    URL https://github.com/Tencent/rapidjson/archive/0d4517f15a8d7167ba9ae67f3f22a559ca841e3b.zip
+    URL_HASH SHA256=4f44adc689e7c08e9eb197276600e58c501624b54102cba06267814e2a4f66eb
+)
+
+FetchContent_GetProperties(rapidjson)
+    if(NOT rapidjson_POPULATED)
+        FetchContent_Populate(rapidjson)
+        # No point in add_subdirectory() - there's no target defined
+        add_library(rapidjson INTERFACE)
+        add_library(rapidjson::rapidjson ALIAS rapidjson)
+        target_include_directories(rapidjson SYSTEM INTERFACE ${rapidjson_SOURCE_DIR}/include)
+    endif()
+
+# find_package(RapidJSON CONFIG REQUIRED)
+# message(STATUS "RapidJSON found. Headers: ${RAPIDJSON_INCLUDE_DIRS}")
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   message("Using MSVC as compiler, default target on Windows 10. "
