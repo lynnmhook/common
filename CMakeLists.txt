@@ -38,6 +38,7 @@ option(TRITON_COMMON_ENABLE_PROTOBUF "Build protobuf artifacts" OFF)
 option(TRITON_COMMON_ENABLE_GRPC "Build grpc artifacts" OFF)
 
 # Note that expected that rapidjson is installed on the machine (see notes) $ apt-get install rapidjson-dev
+# For STA, should have necessary files included for rapidjson
 find_package(RapidJSON CONFIG REQUIRED)
 message(STATUS "RapidJSON found. Headers: ${RAPIDJSON_INCLUDE_DIRS}")
 
